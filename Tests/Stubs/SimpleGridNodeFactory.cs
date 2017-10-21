@@ -6,19 +6,19 @@ namespace Tests.Stubs
 {
     public class SimpleGridNodeFactory : IGridNodeFactory
     {
-        public GraphGridNode CreateNode(Vector2 position, string type)
+        public GraphGridNode CreateNode(int x, int y, string type)
         {
             if (type.Equals("."))
             {
-                return new GraphGridNode((int) position.X, (int) position.Y, true);
+                return new GraphGridNode(x, y, true);
             }
             
             if (type.Equals("#"))
             {
-                return new GraphGridNode((int) position.X, (int) position.Y, false);
+                return new GraphGridNode(x, y, false);
             }
 
-            return new GraphGridNode((int) position.X, (int) position.Y, true);
+            return new GraphGridNode(x, y, true);
         }
     }
 }
