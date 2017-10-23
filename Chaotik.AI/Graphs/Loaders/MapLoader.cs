@@ -10,12 +10,11 @@ namespace Chaotik.AI.Graphs.Loaders
         public GraphGridNode[,] Map { get; private set; }
         public GraphGridNode Source { get; private set; }
         public GraphGridNode Destination { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         private readonly bool _orthogonal;
         private readonly IGridNodeFactory _nodeFactory;
-        
-        private int _width;
-        private int _height;
 
         public MapLoader(Stream fileStream, bool orthogonal, IGridNodeFactory nodeFactory)
                 : this(LoadLines(fileStream), orthogonal, nodeFactory)
@@ -26,17 +25,18 @@ namespace Chaotik.AI.Graphs.Loaders
         {
             _orthogonal = orthogonal;
             _nodeFactory = nodeFactory;
-            
+
+            lines.Reverse();
             LoadGraph(lines);
         }
         
         private void LoadGraph(List<string> lines)
         {
-            _width = CalculateLongestLine(lines);
-            _height = lines.Count;
+            Width = CalculateLongestLine(lines);
+            Height = lines.Count;
             
             Graph = new SparseGraph<GraphGridNode, GraphEdge>(false);
-            Map = new GraphGridNode[_width, _height];
+            Map = new GraphGridNode[Width, Height];
             
             var y = 0;
             foreach (var line in lines)
@@ -61,13 +61,6 @@ namespace Chaotik.AI.Graphs.Loaders
                     x++;
                 }
 
-                for (; x < _width; x++)
-                {
-                    var node = _nodeFactory.CreateNode(x, y, '.'.ToString());
-                    Graph.AddNode(node);
-                    Map[x, y] = node;
-                }
-
                 y++;
             }
             
@@ -76,11 +69,13 @@ namespace Chaotik.AI.Graphs.Loaders
 
         private void CreateEdges()
         {
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < Width; x++)
             {
-                for (var y = 0; y < _height; y++)
+                for (var y = 0; y < Height; y++)
                 {
                     var node = Map[x, y];
+                    
+                    if (node == null) continue;
 
                     AddEdgeIfNeeded(node, x + 1, y + 0);
                     AddEdgeIfNeeded(node, x - 1, y + 0);
@@ -101,10 +96,10 @@ namespace Chaotik.AI.Graphs.Loaders
         {
             if (!node.Passable) return;
             
-            if (x < 0 || x >= _width || y < 0 || y >= _height) return;
+            if (x < 0 || x >= Width || y < 0 || y >= Height) return;
 
             var otherNode = Map[x, y];
-            if (otherNode.Passable)
+            if (otherNode != null && otherNode.Passable)
             {
                 Graph.AddEdge(new GraphEdge(node.Index, otherNode.Index));
             }

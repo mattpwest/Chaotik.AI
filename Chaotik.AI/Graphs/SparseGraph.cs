@@ -51,6 +51,8 @@ namespace Chaotik.AI.Graphs
 
         public int AddNode(NodeType node)
         {
+            if (node == null) return GraphConstants.INVALID_INDEX;
+            
             node.Index = nextIndex++;
             nodes.Add(node);
             edges.Add(new List<EdgeType>());

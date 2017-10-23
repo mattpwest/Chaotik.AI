@@ -4,7 +4,7 @@
     {
         public int X { get; }
         public int Y { get; }
-        public bool Passable { get; }
+        public bool Passable { get; protected set; }
 
         public GraphGridNode(int x, int y) : this(GraphConstants.INVALID_INDEX, x, y, true)
         {
