@@ -4,11 +4,7 @@
     {
         public int Index { get; set; }
 
-        public GraphNode() : this(GraphConstants.INVALID_INDEX)
-        {
-        }
-
-        public GraphNode(int index)
+        public GraphNode(int index = GraphConstants.InvalidIndex)
         {
             Index = index;
         }

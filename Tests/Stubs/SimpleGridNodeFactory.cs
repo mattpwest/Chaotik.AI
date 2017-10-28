@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Chaotik.AI.Graphs;
+﻿using Chaotik.AI.Graphs;
 using Chaotik.AI.Graphs.Loaders;
 
 namespace Tests.Stubs

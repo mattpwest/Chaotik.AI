@@ -43,7 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphs\GraphAlgorithmTests.cs" />
+      <Compile Include="Graphs\Algorithms\DepthFirstSearch.cs"/>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\SimpleGridNodeFactory.cs" />
   </ItemGroup>

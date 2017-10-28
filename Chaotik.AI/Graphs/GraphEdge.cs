@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace Chaotik.AI.Graphs
+﻿namespace Chaotik.AI.Graphs
 {
     public class GraphEdge
     {
         public int From { get; }
         public int To { get; }
-        
-        // This should use less memory for graphs with uniform edge costs - override if stored costs are needed
-        public float Cost => 1.0f;
+        public float Cost => 1.0f; // Use less memory for graphs with uniform edge costs - override for varying costs
 
-        public GraphEdge() : this(GraphConstants.INVALID_INDEX, GraphConstants.INVALID_INDEX)
+        public GraphEdge() : this(GraphConstants.InvalidIndex, GraphConstants.InvalidIndex)
         {
         }
         

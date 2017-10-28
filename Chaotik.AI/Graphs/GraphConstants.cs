@@ -1,14 +1,14 @@
 ﻿namespace Chaotik.AI.Graphs
 {
-    public class GraphConstants
+    public static class GraphConstants
     {
-        public const int INVALID_INDEX = -1;
-        public const float DEFAULT_EDGE_COST = 1.0f;
+        public const int InvalidIndex = -1;
+        public const float DefaultEdgeCost = 1.0f;
     }
 
     public enum NodeState
     {
-        VISITED,
-        UNVISITED
+        Visited,
+        Unvisited
     }
 }

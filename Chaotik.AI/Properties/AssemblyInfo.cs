@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Chaotik.AI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A near as possible vanilla C# AI library for use in DDD Unity game projects in the domain layer.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Matt Van Der Westhuizen")]
 [assembly: AssemblyProduct("Chaotik.AI")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

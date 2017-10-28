@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 namespace Chaotik.AI.Graphs
 {
-    public interface IGraph<NodeType, EdgeType> where NodeType : GraphNode where EdgeType : GraphEdge
+    public interface IGraph<TNodeType, TEdgeType> where TNodeType : GraphNode where TEdgeType : GraphEdge
     {
         bool DiGraph { get; }
         int NodeCount { get; }
         
-        NodeType GetNode(int index);
-        EdgeType GetEdge(int fromIndex, int toIndex);
-        List<EdgeType> GetEdgesFrom(int fromIndex);
+        TNodeType GetNode(int index);
+        TEdgeType GetEdge(int fromIndex, int toIndex);
+        List<TEdgeType> GetEdgesFrom(int fromIndex);
         
-        int AddNode(NodeType node);
+        int AddNode(TNodeType node);
         void RemoveNode(int index);
-        void AddEdge(EdgeType edge);
-        void RemoveEdge(EdgeType edge);
+        void AddEdge(TEdgeType edge);
+        void RemoveEdge(TEdgeType edge);
     }
 }

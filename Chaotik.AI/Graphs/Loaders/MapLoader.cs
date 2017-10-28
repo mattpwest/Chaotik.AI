@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Chaotik.AI.Graphs.Loaders
 {
     public class MapLoader
     {
-        public SparseGraph<GraphGridNode, GraphEdge> Graph { get; private set; }
-        public GraphGridNode[,] Map { get; private set; }
-        public GraphGridNode Source { get; private set; }
-        public GraphGridNode Destination { get; private set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        [PublicAPI] public SparseGraph<GraphGridNode, GraphEdge> Graph { get; private set; }
+        [PublicAPI] public GraphGridNode[,] Map { get; private set; }
+        [PublicAPI] public GraphGridNode Source { get; private set; }
+        [PublicAPI] public GraphGridNode Destination { get; private set; }
+        [PublicAPI] public int Width { get; private set; }
+        [PublicAPI] public int Height { get; private set; }
 
         private readonly bool _orthogonal;
         private readonly IGridNodeFactory _nodeFactory;
@@ -30,7 +31,7 @@ namespace Chaotik.AI.Graphs.Loaders
             LoadGraph(lines);
         }
         
-        private void LoadGraph(List<string> lines)
+        private void LoadGraph(IReadOnlyCollection<string> lines)
         {
             Width = CalculateLongestLine(lines);
             Height = lines.Count;
@@ -49,11 +50,8 @@ namespace Chaotik.AI.Graphs.Loaders
                     Map[x, y] = node;
 
                     if (tileChar == '@')
-                    {
                         Source = node;
-                    }
-
-                    if (tileChar == 'X')
+                    else if (tileChar == 'X')
                     {
                         Destination = node;
                     }

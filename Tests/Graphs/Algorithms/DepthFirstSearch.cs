@@ -5,13 +5,13 @@ using Chaotik.AI.Graphs.Loaders;
 using NUnit.Framework;
 using Tests.Stubs;
 
-namespace Tests.Graphs
+namespace Tests.Graphs.Algorithms
 {
     [TestFixture]
-    public class GraphAlgorithmTests
+    public class DepthFirstSearch
     {
         [Test]
-        public void Test_DepthFirstSearch_Completeness()
+        public void VisitsAllNodes()
         {
             // Given
             var assembly = Assembly.GetExecutingAssembly();
@@ -29,7 +29,7 @@ namespace Tests.Graphs
         }
 
         [Test]
-        public void Test_DepthFirstSearch_FindsPath()
+        public void FindsPathInSimpleGraph()
         {
             // Given
             var assembly = Assembly.GetExecutingAssembly();
@@ -51,7 +51,7 @@ namespace Tests.Graphs
         finds 0,2,3,4 instead.
         */
         [Test]
-        public void Test_DepthFirstSearch_DoesNotShortestPath()
+        public void PathFoundIsNotOptimal()
         {
             // Given
             var assembly = Assembly.GetExecutingAssembly();
@@ -70,7 +70,7 @@ namespace Tests.Graphs
         }
 
         [Test]
-        public void Test_DepthFirstSearch_OnMapFindsPath()
+        public void FindsPathOnComplexMap()
         {
             // Given
             var assembly = Assembly.GetExecutingAssembly();

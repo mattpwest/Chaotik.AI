@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Chaotik.AI.Graphs.Algorithms
 {
@@ -8,23 +9,23 @@ namespace Chaotik.AI.Graphs.Algorithms
         where EdgeType : GraphEdge, new()
     {
         public bool Found { get; }
-        public int NumNodesExplored => visited.Count(state => state == NodeState.VISITED);
+        public int NumNodesExplored => _visited.Count(state => state == NodeState.Visited);
         public List<NodeType> Path
         {
             get
             {
-                List<NodeType> path = new List<NodeType>(route.Count);
+                var path = new List<NodeType>(_route.Count);
                 
-                if (!Found || target == GraphConstants.INVALID_INDEX) return path;
+                if (!Found || _target == GraphConstants.InvalidIndex) return path;
 
-                int nodeIndex = target;
-                path.Add(graph.GetNode(nodeIndex));
+                var nodeIndex = _target;
+                path.Add(_graph.GetNode(nodeIndex));
 
-                while (nodeIndex != source)
+                while (nodeIndex != _source)
                 {
-                    nodeIndex = route[nodeIndex];
+                    nodeIndex = _route[nodeIndex];
                     
-                    path.Add(graph.GetNode(nodeIndex));
+                    path.Add(_graph.GetNode(nodeIndex));
                 }
                 
                 path.Reverse();
@@ -33,67 +34,66 @@ namespace Chaotik.AI.Graphs.Algorithms
             }
         }
 
-        private IGraph<NodeType, EdgeType> graph;
-        private List<int> route;
-        private List<NodeState> visited;
-        private int source;
-        private int target;
+        private readonly IGraph<NodeType, EdgeType> _graph;
+        private readonly List<int> _route;
+        private readonly List<NodeState> _visited;
+        private readonly int _source;
+        private readonly int _target;
 
-        public GraphDepthFirstSearch(IGraph<NodeType, EdgeType> graph, int source) : this(graph, source,
-            GraphConstants.INVALID_INDEX)
+        public GraphDepthFirstSearch(
+            IGraph<NodeType, EdgeType> graph,
+            int source,
+            int target = GraphConstants.InvalidIndex)
         {
-        }
-        
-        public GraphDepthFirstSearch(IGraph<NodeType, EdgeType> graph, int source, int target)
-        {
-            this.graph = graph;
-            this.source = source;
-            this.target = target;
+            _graph = graph;
+            _source = source;
+            _target = target;
             
-            visited = new List<NodeState>(graph.NodeCount);
+            _visited = new List<NodeState>(graph.NodeCount);
             for (var i = 0; i < graph.NodeCount; i++)
             {
-                visited.Add(NodeState.UNVISITED);
+                _visited.Add(NodeState.Unvisited);
             }
             
-            route = new List<int>(graph.NodeCount);
+            _route = new List<int>(graph.NodeCount);
             for (var i = 0; i < graph.NodeCount; i++)
             {
-                route.Add(GraphConstants.INVALID_INDEX);
+                _route.Add(GraphConstants.InvalidIndex);
             }
             
             Found = Search();
         }
         
+        [PublicAPI]
         public bool Search()
         {
-            Stack<EdgeType> edgeStack = new Stack<EdgeType>();
-            route[source] = source;
-            visited[source] = NodeState.VISITED;
+            var edgeStack = new Stack<EdgeType>();
+            _route[_source] = _source;
+            _visited[_source] = NodeState.Visited;
 
-            if (source == target)
+            if (_source == _target)
             {
                 return true;
             }
 
-            graph.GetEdgesFrom(source).ForEach(edgeStack.Push);
+            _graph.GetEdgesFrom(_source).ForEach(edgeStack.Push);
             
             while (edgeStack.Count != 0)
             {
                 var next = edgeStack.Pop();
 
-                route[next.To] = next.From;
+                _route[next.To] = next.From;
 
-                visited[next.To] = NodeState.VISITED;
+                _visited[next.To] = NodeState.Visited;
 
-                if (next.To == target)
+                if (next.To == _target)
                 {
                     return true;
                 }
                 
-                graph.GetEdgesFrom(next.To).ForEach(edge =>
+                _graph.GetEdgesFrom(next.To).ForEach(edge =>
                 {
-                    if (visited[edge.To] == NodeState.UNVISITED)
+                    if (_visited[edge.To] == NodeState.Unvisited)
                     {
                         edgeStack.Push(edge);
                     }

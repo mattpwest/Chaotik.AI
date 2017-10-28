@@ -3,84 +3,84 @@ using System.Collections.Generic;
 
 namespace Chaotik.AI.Graphs
 {
-    public class SparseGraph<NodeType, EdgeType> : IGraph<NodeType, EdgeType>
-        where NodeType : GraphNode
-        where EdgeType : GraphEdge
+    public class SparseGraph<TNodeType, TEdgeType> : IGraph<TNodeType, TEdgeType>
+        where TNodeType : GraphNode
+        where TEdgeType : GraphEdge
     {
         public bool DiGraph { get; }
-        public int NodeCount => nodes.Count;
+        public int NodeCount => _nodes.Count;
 
-        private int nextIndex;
-        private List<NodeType> nodes;
-        private List<List<EdgeType>> edges;
+        private int _nextIndex;
+        private readonly List<TNodeType> _nodes;
+        private readonly List<List<TEdgeType>> _edges;
 
         public SparseGraph(bool diGraph)
         {
             DiGraph = diGraph;
-            nextIndex = 0;
+            _nextIndex = 0;
             
-            nodes = new List<NodeType>();
-            edges = new List<List<EdgeType>>();
+            _nodes = new List<TNodeType>();
+            _edges = new List<List<TEdgeType>>();
         }
 
-        public NodeType GetNode(int index)
+        public TNodeType GetNode(int index)
         {
-            if (index < 0 || index > nodes.Count)
+            if (index < 0 || index > _nodes.Count)
             {
                 return null;
             }
 
-            var node = nodes[index];
-            return node.Index != GraphConstants.INVALID_INDEX ? node : null;
+            var node = _nodes[index];
+            return node.Index != GraphConstants.InvalidIndex ? node : null;
         }
 
-        public EdgeType GetEdge(int fromIndex, int toIndex)
+        public TEdgeType GetEdge(int fromIndex, int toIndex)
         {
-            if (fromIndex < 0 || fromIndex > edges.Count)
+            if (fromIndex < 0 || fromIndex > _edges.Count)
             {
                 return null;
             }
 
-            return edges[fromIndex].Find(edge => edge.To == toIndex);
+            return _edges[fromIndex].Find(edge => edge.To == toIndex);
         }
 
-        public List<EdgeType> GetEdgesFrom(int fromIndex)
+        public List<TEdgeType> GetEdgesFrom(int fromIndex)
         {
-            return new List<EdgeType>(edges[fromIndex]);
+            return new List<TEdgeType>(_edges[fromIndex]);
         }
 
-        public int AddNode(NodeType node)
+        public int AddNode(TNodeType node)
         {
-            if (node == null) return GraphConstants.INVALID_INDEX;
+            if (node == null) return GraphConstants.InvalidIndex;
             
-            node.Index = nextIndex++;
-            nodes.Add(node);
-            edges.Add(new List<EdgeType>());
+            node.Index = _nextIndex++;
+            _nodes.Add(node);
+            _edges.Add(new List<TEdgeType>());
             return node.Index;
         }
 
         public void RemoveNode(int index)
         {
-            if (index < 0 || index > nodes.Count)
+            if (index < 0 || index > _nodes.Count)
             {
                 return;
             }
 
-            nodes[index].Index = GraphConstants.INVALID_INDEX;
+            _nodes[index].Index = GraphConstants.InvalidIndex;
             
             // TODO: Should probably kill related edges?
         }
 
-        public void AddEdge(EdgeType edge)
+        public void AddEdge(TEdgeType edge)
         {
-            for (int i = edges.Count; i < Math.Max(edge.From, edge.To) + 1; i++)
+            for (var i = _edges.Count; i < Math.Max(edge.From, edge.To) + 1; i++)
             {
-                edges.Add(new List<EdgeType>());
+                _edges.Add(new List<TEdgeType>());
             }
             
-            if (!edges[edge.From].Contains(edge))
+            if (!_edges[edge.From].Contains(edge))
             {
-                edges[edge.From].Add(edge);
+                _edges[edge.From].Add(edge);
             }
 
 //            TODO: Handle non-directional graphs somehow without requiring loaded data to input both directions
@@ -90,13 +90,13 @@ namespace Chaotik.AI.Graphs
 //            }
         }
 
-        public void RemoveEdge(EdgeType edge)
+        public void RemoveEdge(TEdgeType edge)
         {
-            edges[edge.From].Remove(edge);
+            _edges[edge.From].Remove(edge);
 
             if (!DiGraph)
             {
-                edges[edge.To].Remove(edge);
+                _edges[edge.To].Remove(edge);
             }
         }        
     }

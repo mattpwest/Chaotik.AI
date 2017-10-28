@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using JetBrains.Annotations;
 
 namespace Chaotik.AI.Graphs.Loaders
 {
     public class AdjacencyListLoader
     {
-        public SparseGraph<GraphNode, GraphEdge> Graph => _graph;
-        
-        private SparseGraph<GraphNode, GraphEdge> _graph;
+        public SparseGraph<GraphNode, GraphEdge> Graph { get; private set; }
 
         public AdjacencyListLoader(Stream stream)
         {
             Load(stream);
         }
 
+        [PublicAPI]
         public void Load(Stream stream)
         {
-            _graph = new SparseGraph<GraphNode, GraphEdge>(false);
+            Graph = new SparseGraph<GraphNode, GraphEdge>(false);
             var lines = LoadLines(stream);
             foreach (var line in lines)
             {
                 var nodes = line.Split(',');
                 var from = int.Parse(nodes[0]);
 
-                GraphNode node = new GraphNode();
-                if (_graph.AddNode(node) != from)
+                var node = new GraphNode();
+                if (Graph.AddNode(node) != from)
                 {
                     throw new ArgumentException("Invalid source data: new node does not match graph index.");
                 }
@@ -34,14 +34,14 @@ namespace Chaotik.AI.Graphs.Loaders
                 {
                     var to = int.Parse(nodes[i]);
 
-                    _graph.AddEdge(new GraphEdge(from, to));
+                    Graph.AddEdge(new GraphEdge(from, to));
                 }
             }
         }
 
-        private static List<string> LoadLines(Stream stream)
+        private static IEnumerable<string> LoadLines(Stream stream)
         {
-            List<string> lines = new List<string>();
+            var lines = new List<string>();
             
             using (var reader = new StreamReader(stream))
             {
